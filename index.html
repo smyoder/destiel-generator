@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Destiel Generator</title>
+    <link rel="icon" href="favicon.ico">
+    <style>
+      body {
+        background-color: #131313;
+        font-family: arial, sans-serif;
+        color: white;
+        display: flex;
+        height: 100vh;
+        justify-content: space-between;
+      }
+      .main {
+        display: flex;
+        flex-direction: column;
+        max-width: 40em;
+        max-height: 100vh;
+        overflow: hidden;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .controls-div {
+        height: 3em;
+        font-size: 2.5em;
+      }
+      .controls-div * {
+        font-size: 0.8em;
+      }
+      input {
+        border: 1px solid gray;
+        background-color: #2B2A33;
+        color: white;
+      }
+      input::placeholder {
+        color: lightGray;
+      }
+      button {
+        margin: 0;
+        border-radius: 0.4em;
+        border: 2px solid gray;
+        background-color: black;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      var caption = "";
+      function updateCanvas() {
+        let canvas = document.getElementById("canvas");
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(document.getElementById("template"), 0, 0);
+        
+        ctx.font = "bold 20pt sans-serif";
+        let bounds = ctx.measureText(caption);
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "2px solid black";
+        ctx.strokeText(caption, (canvas.width - bounds.width) / 2, canvas.height - 20);
+        ctx.fillText(caption, (canvas.width - bounds.width) / 2, canvas.height - 20);
+      }
+      function updateCaption() {
+        caption = document.getElementById("caption-input").value;
+        updateCanvas();
+      }
+      function saveImage() {
+        canvas.toBlob(blob => {
+          let a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "destiel.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }, "image/png");
+      }
+    </script>
+  </head>
+  <body>
+    <div class="main">
+      <div>
+        <h1>Destiel Meme Generator</h1>
+      </div>
+      <div>
+        <img src="template.png" style="display: none;" id="template" />
+        <canvas id=canvas width="551" height="614" />
+      </div>
+      <div class="controls-div">
+        <form action="javascript:saveImage()">
+          <input placeholder="Enter a caption." id="caption-input" oninput="updateCaption();"/>
+          <button>Save Image</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script>updateCaption();</script>
+</html>
